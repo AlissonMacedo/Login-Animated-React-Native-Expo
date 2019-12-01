@@ -1,5 +1,14 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, Dimensions, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TextInput,
+  KeyboardAvoidingView,
+  StatusBar,
+  Alert
+} from "react-native";
 
 import Svg, { Image, Circle, ClipPath } from "react-native-svg";
 
@@ -91,7 +100,7 @@ class MusicApp extends Component {
 
     this.bgY = interpolate(this.buttonOpacity, {
       inputRange: [0, 1],
-      outputRange: [-height / 3 - 50, 0],
+      outputRange: [-height / 3 + 30, 0],
       extrapolate: Extrapolate.CLAMP
     });
 
@@ -119,31 +128,30 @@ class MusicApp extends Component {
       extrapolate: Extrapolate.CLAMP
     });
   }
+
+  handleClick = e => {
+    return Alert.alert("Sucesso", "Login realizado com sucesso!");
+  };
   render() {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: "white",
-          justifyContent: "flex-end"
-        }}
+      <KeyboardAvoidingView
+        style={styles.container2}
+        behavior="padding"
+        enabled
       >
+        <StatusBar backgroundColor="black" barStyle="light-content" />
         <Animated.View
           style={{
             ...StyleSheet.absoluteFill,
-            transform: [{ translateY: this.bgY }]
+            backgroundColor: "#545454"
           }}
         >
-          <Svg height={height + 50} width={width}>
-            <ClipPath id="clip">
-              <Circle r={height + 50} cx={width / 2} />
-            </ClipPath>
+          <Svg height={height} width={width}>
             <Image
-              href={require("../assets/background.jpeg")}
-              height={height + 50}
+              href={require("../assets/logo-barber.jpg")}
+              height={height}
               width={width}
               preserveAspectRatio="xMidYMid slice"
-              clipPath="url(#clip)"
             />
           </Svg>
         </Animated.View>
@@ -179,7 +187,10 @@ class MusicApp extends Component {
               height: height / 3,
               ...StyleSheet.absoluteFill,
               top: null,
-              justifyContent: "center"
+              justifyContent: "center",
+              backgroundColor: "#FFF",
+              borderTopLeftRadius: 30,
+              borderTopRightRadius: 30
             }}
           >
             <TapGestureHandler onHandlerStateChange={this.onCloseState}>
@@ -196,21 +207,27 @@ class MusicApp extends Component {
             </TapGestureHandler>
 
             <TextInput
-              placeholder="EMAIL"
+              keyboardType="email-address"
+              autoCorrect={false}
+              autoCapitalize="none"
+              placeholder="Digite seu e-mail"
+              returnKeyType="next"
               style={styles.textInput}
-              placeholderTextColor="black"
+              placeholderTextColor="#333"
             />
             <TextInput
-              placeholder="PASSWORD"
+              secureTextEntry
+              placeholder="Sua senha secreta"
+              returnKeyType="send"
               style={styles.textInput}
-              placeholderTextColor="black"
+              placeholderTextColor="#333"
             />
-            <Animated.View style={styles.button}>
+            <Animated.View onTouchEnd={this.handleClick} style={styles.button}>
               <Text style={{ fontSize: 20, fontWeight: "bold" }}>SIGN IN</Text>
             </Animated.View>
           </Animated.View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -221,6 +238,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center"
+  },
+  container2: {
+    flex: 1,
+    backgroundColor: "white",
+    justifyContent: "flex-end"
   },
   button: {
     backgroundColor: "white",
@@ -239,7 +261,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 0.5,
     marginHorizontal: 20,
-    paddingLeft: 10,
+    paddingLeft: 20,
     marginVertical: 5,
     borderColor: "rgba(0,0,0,0.2)"
   },
